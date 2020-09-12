@@ -36,24 +36,33 @@ int main(int argc, char** argv) {
         label.push_back(toPos(out));
     }
 
-    for (int i = 0; i < 100000; i++) {
-        int index = i % (train.size());
-        nn.train(train[index], label[index]);
+    double totalAcc;
+
+    for (int k = 0; k < 10; k++) {
+        for (int i = 0; i < 100000; i++) {
+            int index = i % (train.size());
+            nn.train(train[index], label[index]);
+        }
+
+        double rate = 0;
+        double acc = 0;
+
+        for (int i = 0; i < train.size(); i++) {
+            std::vector<double> output = nn.predict(train[i]);
+            double o = fromPos(label[i]);
+            double a = fromOut(output);
+            //std::cout << "output: " << a << " label: " << o << std::endl;
+            if (a == o) rate++;
+        }
+
+        acc = rate / train.size();
+
+        std::cout << "rate: " << rate << "/" << train.size() << " acc: " << acc << std::endl;
+
+        totalAcc += acc;
     }
 
-    file = std::ifstream("bin/iris_data_files/iris_test.dat");
-
-    double rate = 0;
-
-    for (int i = 0; i < train.size(); i++) {
-        std::vector<double> output = nn.predict(train[i]);
-        double o = fromPos(label[i]);
-        double a = fromOut(output);
-        //std::cout << "output: " << a << " label: " << o << std::endl;
-        if (a == o) rate++;
-    }
-
-    std::cout << "rate: " << rate << "/" << train.size() << " acc: " << rate / train.size() << "%" << std::endl;
+    std::cout << "Average acc: " << totalAcc / 10 << std::endl;
 
     return 0;
 }

@@ -3,7 +3,7 @@ IPATH=-Iinc/
 SRC=src
 OBJ=obj
 BIN=bin
-FLAGS=-std=c++2a -g
+FLAGS=-std=c++2a
 
 SRC_FILES=$(wildcard $(SRC)/*.cpp)
 OBJ_FILES=$(patsubst $(SRC)/%.cpp,$(OBJ)/%.o,$(SRC_FILES))
